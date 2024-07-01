@@ -1,7 +1,7 @@
 ---
 title: Beginnings
 author: Li-Sha Lim
-pubDatetime: 2022-09-21T05:17:19Z
+pubDatetime: 2024-07-01T06:28:19Z
 slug: beginnings
 featured: true
 draft: false
@@ -11,6 +11,7 @@ ogImage: ""
 description: Introductory post
 canonicalURL: https://example.org/my-article-was-already-posted-here
 ---
+
 Why start a blog?
 
 As I'm writing this, I have various loosely coupled reasons, and lots of doubts. But just as with some decisions, there will be no end to thinking and deliberating, and this is one of those. So sometimes, it's best to just say yes, and go from there.
@@ -24,4 +25,3 @@ It's this general feeling of mental malaise that led me to starting this blog, b
 And lastly, if there are any interesting "meta" thoughts which I find substantial enough to write about, I'd commit those to a post as well.
 
 Here's to hoping that there are more posts to come! ;)
-
