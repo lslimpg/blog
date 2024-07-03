@@ -18,7 +18,11 @@ const { noMarginTop = false } = Astro.props;
     <div class="copyright-wrapper">
       <span>&#169; Digestives {currentYear}</span>
       <span class="separator">&nbsp;|&nbsp;</span>
-      <span>Based on <a href="https://github.com/satnaing/astro-paper">AstroPaper template</a></span>
+      <span
+        >Template based on<a href="https://github.com/satnaing/astro-paper"
+          ><u>AstroPaper</u></a
+        ></span
+      >
     </div>
   </div>
 </footer>
@@ -42,8 +46,7 @@ const { noMarginTop = false } = Astro.props;
   .separator {
     @apply hidden sm:inline;
   }
-  a:hover {
-    font-weight: bold;
-    color: yellow;
+  a > u {
+    @apply my-1 p-2 hover:text-skin-accent;
   }
 </style>
