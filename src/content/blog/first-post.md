@@ -3,13 +3,11 @@ title: Beginnings
 author: Li-Sha Lim
 pubDatetime: 2024-07-01T06:28:19Z
 slug: beginnings
-featured: true
+featured: false
 draft: false
 tags:
   - misc
-ogImage: ""
 description: Introductory post
-canonicalURL: https://example.org/my-article-was-already-posted-here
 ---
 
 Why start a blog?
