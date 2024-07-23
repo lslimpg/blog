@@ -8,4 +8,4 @@ production = { }
 
 [[kv_namespaces]]
 binding = "BLOG_PAGE_VIEWS"
-id = "a8479d7138404b11a272f301a44206d1"
+id = "69f9118c0c204f7eaad3805639bc95bf"
