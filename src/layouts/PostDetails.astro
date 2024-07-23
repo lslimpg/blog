@@ -8,6 +8,7 @@ import type { CollectionEntry } from "astro:content";
 import { slugifyStr } from "@utils/slugify";
 import ShareLinks from "@components/ShareLinks.astro";
 import { SITE } from "@config";
+import ViewCount from "@components/ViewCount";
 
 export interface Props {
   post: CollectionEntry<"blog">;
@@ -73,6 +74,7 @@ const layoutProps = {
       size="lg"
       className="my-2"
     />
+    <ViewCount client:only title={title} />
     <article id="article" role="article" class="prose mx-auto mt-8 max-w-3xl">
       <Content />
     </article>
