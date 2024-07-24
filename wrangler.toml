@@ -3,9 +3,6 @@ name = "blog"
 pages_build_output_dir = "dist"
 compatibility_date = "2024-07-03"
 
-[env]
-production = { }
-
 [[kv_namespaces]]
 binding = "BLOG_PAGE_VIEWS"
 id = "69f9118c0c204f7eaad3805639bc95bf"
