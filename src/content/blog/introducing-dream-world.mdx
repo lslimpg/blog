@@ -117,7 +117,7 @@ object created by Phaser on being rendered the first time, the ref within App co
 rendered. Depending on the scene the App component may conditionally render other
 pure React components.
 
-```
+```js
 if (game.current === undefined)
 {
     game.current = StartGame("game-container");
@@ -136,7 +136,7 @@ element under a parent DOM node with `game-container` id.
 which runs in a `useEffect` escape hatch, and the handler updates its
 parent App component reference to the scene:
 
-```
+```js
 useEffect(() => {
 
     EventBus.on('current-scene-ready', (currentScene) => {
@@ -166,7 +166,7 @@ displaying the next message, and closing the dialog box. With all these informat
 it then conditionally renders the Message component, which takes care of creating
 a typewriter effect using delays.
 
-```
+```js
 import { useState } from 'react';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
@@ -243,7 +243,7 @@ function DialogBox({ msgs, width, height, bottomOffset, callback }) {
 
 export default DialogBox;
 ```
-```
+```js
 import React, { useState, useEffect } from 'react'
 
 function Message({msg, delay, callback}) {
@@ -290,7 +290,7 @@ example would be the spawn point of characters and NPCs. In this case, I created
 polygons from the coordinates listed in the Object Layer for the points of interest,
 then added glow effects to them:
 
-```
+```js
 this.objLayer.objects.forEach(e => {
   if (e.name === objName) {
     const points = e.polygon.map(({ x, y }) => [x, y]).flat();
