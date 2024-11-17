@@ -34,6 +34,7 @@ const ogUrl = new URL(
   ogImageUrl ?? `/posts/${slugifyStr(title)}.png`,
   Astro.url.origin
 ).href;
+const postUrl = `/posts/${post.slug}`;
 
 const layoutProps = {
   title: `${title} | ${SITE.title}`,
@@ -74,7 +75,7 @@ const layoutProps = {
       size="lg"
       className="my-2"
     />
-    <ViewCount client:only title={title} />
+    <ViewCount client:load postUrl={postUrl} />
     <article id="article" role="article" class="prose mx-auto mt-8 max-w-3xl">
       <Content />
     </article>

@@ -6,13 +6,19 @@ slug: adding-view-count-to-blog
 featured: false
 draft: false
 tags:
-  - Cloudflare KV
+  - cloudflare-kv
   - serverless
   - cookies
-description: Adding page view count using Cloudflare KV and cookies
+  - graphql
+  - cloudflare-d1
+description: Exploring different methods to update view count
 ---
 
-I've taken a slight detour from working on dream-world, as I felt that my blog could use a few extra features than what it currently has out-of-box. Two features which I would like my blog to have are page views and comments, and this post covers the steps I've taken to implement the former.
+## Table of Contents
+
+I'd like my blog to have a few extra features than what it currently has out-of-box. Those two being page views and comments, and this post covers the steps I've taken to implement the former.
+
+## Using Cookies + Cloudflare KV
 
 Keeping track of page views is a rather simple feature, and so is a perfect first "mini-project" for me to get my feet wet with using some kind of datastore. Having set up this site using [Cloudflare Pages](https://pages.cloudflare.com/), I've been really impressed with how easy deployment is, where everything _just works_. So this gave me a chance to explore their other products.
 
@@ -155,8 +161,40 @@ function parseRequestCookie(req) {
 }
 ```
 
+## Getting page views through Cloudflare GraphQL
+
+Coming to the end of working through the first solution, I realised that Cloudflare exposes a graphql API for [Web Analytics](https://www.cloudflare.com/web-analytics/), and I thought I should give it a try.
+
+Their analytics allows us to get detailed analytics metrics such as page views, unique visitors, and visit durations. Some of these metrics are already displayed on the developer dashboard:
+![cf-dashboard-view](@assets/images/cf-dashboard-view.png)
+
+I wanted my view count on each page to reflect what I'm seeing on the dashboard. Coming back to this after a few months of deploying the KV + cookie method, I'm seeing a disparity in the view count, and I'm not quite sure why. Although the view count through CF seems to log new visits, the existing view count remained stagnant. And from what I've researched, one explanation why could be that CF does count a page reload as a new visit. But, the stats do show visits from Mac platforms, and
+being that I'm not on any, those should be new. I haven't quite figured out the reason yet, and will come back to this later when I do find out why.
+
+I haven't had any experience using graphql, and having CoPilot enabled, I figured I'd ask it how to generate a query to get page views. Perhaps I'm new to both tools, and my prompt wasn't precise enough, but the suggestion from copilot wasn't working.
+It took quite a bit of digging, but what actually helped was [capturing the graphql request using DevTools](https://developers.cloudflare.com/analytics/graphql-api/tutorials/capture-graphql-queries-from-dashboard/).
+
+The query extracted was quite long, but after simplifying it to what I wanted, it looked like this:
+
+```js
+query GetRumAnalyticsTopNs {
+  viewer {
+    accounts(filter: { accountTag: $accountTag }) {
+      total: rumPageloadEventsAdaptiveGroups(filter: $filter, limit: 1) {
+        count
+      }
+    }
+  }
+}
+```
+
+rum basically stands for Real User Monitoring, which reflects views loaded by a user and discounts those loaded by bots.
+
+The next part was figuring out how to configure secrets correctly. Initially, I thought it was through [astro](https://docs.astro.build/en/guides/environment-variables/). But since I'm accessing these secrets within the context of CF functions, these should actually be configured using CF's [setup](https://developers.cloudflare.com/workers/configuration/secrets/).
+
+One gotcha of depending on this API is that CF only provides a running count of the past 30 days at maximum. To deal with this,
+I decided to update the view count of all posts once per day, this time using [D1](https://developers.cloudflare.com/d1/get-started/#4-run-a-query-against-your-d1-database), and [Cron Trigger](https://developers.cloudflare.com/workers/configuration/cron-triggers/).
+
 ## Conclusion
 
-While coming to the end of working on this, I discovered that all along, Cloudflare may already have what I needed in the form of [Web Analytics](https://www.cloudflare.com/web-analytics/). Theirs is probably a more complete solution, but this has still been a good exercise. In the meantime, I will read more into this offering, and decide on if to migrate to their solution.
-
-Till next time!
+Although it's a simple feature, it's enabled me to get my feet wet with a few different CF products. I've left the cookie method running in the background of my code, having both of these run side by side so I can get further concrete metrics to work with. It's a fun few hours on the weekend learning something new!
