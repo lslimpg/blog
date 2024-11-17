@@ -11,8 +11,7 @@
     "format:check": "prettier --check . --plugin=prettier-plugin-astro",
     "format": "prettier --write . --plugin=prettier-plugin-astro",
     "cz": "cz",
-    "prepare": "husky install",
-    "lint": "eslint ."
+    "prepare": "husky install"
   },
   "dependencies": {
     "@astrojs/check": "^0.7.0",
@@ -59,7 +58,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,md,mdx,json,astro}": [
-      "prettier --write --plugin=prettier-plugin-astro"
+      "prettier --write"
     ]
   }
 }

@@ -13,7 +13,8 @@ tags:
   - dream-world
 description: Notes about my journey creating my first game using Phaser
 ---
-import Media from '../../components/Media.tsx'
+
+import Media from "../../components/Media.tsx";
 
 <Media client:load src="https://dev.dream-world.pages.dev/" />
 
@@ -26,13 +27,13 @@ dealing with kernel drivers. However, I haven't had the chance to work on
 web-facing types of applications yet, and wanted to learn it, hence this project.
 
 The motivation was to learn Javascript, and how web applications work, in general.
-I went through tutorial hell for the first three months or so earlier this year, 
+I went through tutorial hell for the first three months or so earlier this year,
 earnestly spending hours going through videos of a Udemy course on web development
-I bought. And while I did learn some, I didn't feel I had a solid grasp on the new 
+I bought. And while I did learn some, I didn't feel I had a solid grasp on the new
 concepts that I have learnt, even after coding along with the videos that I've watched.
 That's when I decided I had to program something from scratch. I spent a fair bit of
 time deciding on what to build. But as I'm typing this post, I realised it doesn't
-actually matter. You will get invested in it once you get started. Just like how you 
+actually matter. You will get invested in it once you get started. Just like how you
 wouldn't choose to code some stuff you are doing at work, or a coursework assignment,
 you are still invested in it having started working on it, having to fix bugs encountered
 along the way. But I digress.
@@ -56,7 +57,7 @@ Almost all the information I needed for my project are in the above two posts.
 ## Tiled
 
 There will be no game without any sort of graphics, so creating the tilemap would be
-the first step. Following the example of the two posts above, I made the tilemap using the 
+the first step. Following the example of the two posts above, I made the tilemap using the
 Tiled map editor. Since I have Ubuntu setup on my machine, I installed it through the [snap
 package manager](https://snapcraft.io/tiled)
 
@@ -118,14 +119,12 @@ rendered. Depending on the scene the App component may conditionally render othe
 pure React components.
 
 ```js
-if (game.current === undefined)
-{
-    game.current = StartGame("game-container");
-    
-    if (ref !== null)
-    {
-        ref.current = { game: game.current, scene: null };
-    }
+if (game.current === undefined) {
+  game.current = StartGame("game-container");
+
+  if (ref !== null) {
+    ref.current = { game: game.current, scene: null };
+  }
 }
 ```
 
@@ -138,25 +137,19 @@ parent App component reference to the scene:
 
 ```js
 useEffect(() => {
-
-    EventBus.on('current-scene-ready', (currentScene) => {
-
-        if (currentActiveScene instanceof Function)
-        {
-            currentActiveScene(currentScene);
-        }
-        ref.current.scene = currentScene;
-        
-    });
-
-    return () => {
-
-        EventBus.removeListener('current-scene-ready');
-
+  EventBus.on("current-scene-ready", currentScene => {
+    if (currentActiveScene instanceof Function) {
+      currentActiveScene(currentScene);
     }
-    
-}, [currentActiveScene, ref])
+    ref.current.scene = currentScene;
+  });
+
+  return () => {
+    EventBus.removeListener("current-scene-ready");
+  };
+}, [currentActiveScene, ref]);
 ```
+
 And that's basically the gist of the code structure.
 
 I've added a `DialogBox.jsx` component to hold the background dialog image I
@@ -167,12 +160,12 @@ it then conditionally renders the Message component, which takes care of creatin
 a typewriter effect using delays.
 
 ```js
-import { useState } from 'react';
-import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
-import Message from './Message';
-import { ButtonBase, CardContent } from '@mui/material';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { useState } from "react";
+import Card from "@mui/material/Card";
+import Button from "@mui/material/Button";
+import Message from "./Message";
+import { ButtonBase, CardContent } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 function DialogBox({ msgs, width, height, bottomOffset, callback }) {
   const numMsgs = msgs.length;
@@ -184,11 +177,11 @@ function DialogBox({ msgs, width, height, bottomOffset, callback }) {
     <Card
       sx={{
         backgroundImage: "url('../assets/dialog_box.png')",
-        backgroundSize: '100% 100%',
-        padding: '2%',
-        position: 'absolute',
-        transform: 'translateX(-50%)',
-        left: '50%',
+        backgroundSize: "100% 100%",
+        padding: "2%",
+        position: "absolute",
+        transform: "translateX(-50%)",
+        left: "50%",
         bottom: `${bottomOffset}px`,
         height: `${Math.ceil(height / 4)}px`,
         width: `${width / 1.5}px`,
@@ -196,11 +189,11 @@ function DialogBox({ msgs, width, height, bottomOffset, callback }) {
     >
       <CardContent
         sx={{
-          height: '75%',
-          overflowY: 'scroll',
-          display: 'flex',
-          flexGrow: '1',
-          flexDirection: 'column',
+          height: "75%",
+          overflowY: "scroll",
+          display: "flex",
+          flexGrow: "1",
+          flexDirection: "column",
         }}
       >
         <Message
@@ -213,7 +206,7 @@ function DialogBox({ msgs, width, height, bottomOffset, callback }) {
         ></Message>
         {isLast && showCursor && (
           <Button
-            sx={{ alignSelf: 'flex-end' }}
+            sx={{ alignSelf: "flex-end" }}
             onClick={() => {
               setMsgIdx(0);
               setShowCursor(false);
@@ -225,14 +218,14 @@ function DialogBox({ msgs, width, height, bottomOffset, callback }) {
         )}
         {!isLast && showCursor && (
           <ButtonBase
-            sx={{ alignSelf: 'flex-end' }}
+            sx={{ alignSelf: "flex-end" }}
             onClick={() => {
               setShowCursor(false);
               setIsLast(msgIdx + 1 === numMsgs - 1);
               setMsgIdx(msgIdx + 1);
             }}
           >
-            {' '}
+            {" "}
             {<NavigateNextIcon fontSize="large"></NavigateNextIcon>}
           </ButtonBase>
         )}
@@ -243,39 +236,39 @@ function DialogBox({ msgs, width, height, bottomOffset, callback }) {
 
 export default DialogBox;
 ```
+
 ```js
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 
-function Message({msg, delay, callback}) {
-    const [idx, setIdx] = useState(0);
-    const [text, setText] = useState('');
-    const length = msg.length;
+function Message({ msg, delay, callback }) {
+  const [idx, setIdx] = useState(0);
+  const [text, setText] = useState("");
+  const length = msg.length;
 
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            if (idx < length) {
-                setText(text + msg[idx]);
-                setIdx(idx + 1);
-            } else {
-                // console.log('end');
-                callback();
-            }
-        }, delay);
-        return () => {
-            clearTimeout(timeout);
-        }
-    }, [text, msg, idx])
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (idx < length) {
+        setText(text + msg[idx]);
+        setIdx(idx + 1);
+      } else {
+        // console.log('end');
+        callback();
+      }
+    }, delay);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [text, msg, idx]);
 
-    return (
-        <div style={{fontSize: '1.2em'}}>{text}</div>
-    )
+  return <div style={{ fontSize: "1.2em" }}>{text}</div>;
 }
 
 export default Message;
 ```
+
 I've added more events to the EventBus to handle the novel's state machine.
 Aside from just displaying messages to the player, I tried adding some
-interactivity to the novel by adding glow effects and adding a minimap to 
+interactivity to the novel by adding glow effects and adding a minimap to
 the viewport so that the player would get hints on where to go next to
 trigger the next state.
 
@@ -300,6 +293,7 @@ this.objLayer.objects.forEach(e => {
   }
 });
 ```
+
 I'd just to like to bring special attention to the 5th parameter in the addGlow method
 above. It has this [signature](https://newdocs.phaser.io/docs/3.80.0/Phaser.GameObjects.Components.FX#addGlow),
 and the fifth is related to the quality of the glow effect. Be careful about setting
@@ -330,7 +324,7 @@ And finally, my dream is to add some multiplayer kind of component to this, whic
 I need to figure out the scope and features that would make a multiplayer fit into this. So in summary,
 here's what I have in plan next:
 
-- Pathfinding 
+- Pathfinding
 - Redux
 - Multiplayer
 
