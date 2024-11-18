@@ -119,10 +119,9 @@ async function getPageViewThruCFAnalytics(ctx) {
   const resp = await fetch("https://api.cloudflare.com/client/v4/graphql", {
     method: "POST",
     headers: {
-      Accept: "application/json",
       "Content-Type": "application/json",
       "X-AUTH-EMAIL": `${ctx.env.X_AUTH_EMAIL}`,
-      AUTHORIZATION: `${ctx.env.ACC_ANALYTICS_TOKEN}`,
+      "X-AUTH-KEY": `${ctx.env.X_AUTH_KEY}`,
     },
     body: JSON.stringify({
       query: `query GetRumAnalyticsTopNs {
@@ -154,6 +153,7 @@ async function getPageViewThruCFAnalytics(ctx) {
     }),
   });
   const res = await resp.json();
+  console.log(res);
   return res;
 }
 
@@ -162,11 +162,12 @@ export async function onRequestGet(ctx) {
     let res = await getPageViewThruCFAnalytics(ctx);
     let { count, errors } = flattenObject(res);
     count = count || 0;
+    console.log(count);
     if (errors) {
       return new Response(null, { status: 500, statusText: errors });
     }
     let totalViews = (await queryDB(ctx)) || 0;
-    res = await updateDB(totalViews === null, (totalViews += count), ctx);
+    console.log(totalViews);
     if (!res) {
       return new Response(null, {
         status: 500,
