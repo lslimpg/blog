@@ -122,7 +122,7 @@ async function getPageViewThruCFAnalytics(ctx) {
       Accept: "application/json",
       "Content-Type": "application/json",
       "X-AUTH-EMAIL": `${ctx.env.X_AUTH_EMAIL}`,
-      AUTHORIZATION: `${ctx.env.ACC_ANALYTICS_TOKEN}`,
+      "X-AUTH-KEY": `${ctx.env.X_AUTH_KEY}`,
     },
     body: JSON.stringify({
       query: `query GetRumAnalyticsTopNs {
