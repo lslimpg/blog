@@ -168,17 +168,15 @@ export async function onRequestGet(ctx) {
     }
     let totalViews = (await queryDB(ctx)) || 0;
     console.log(totalViews);
-    if (!res) {
-      return new Response(null, {
-        status: 500,
-        statusText: "DB update failed",
-      });
+    if (!totalViews) {
+      await updateDB(true, count, ctx);
+      totalViews = count;
     }
     // const count = await getPageViewThruKVCookieMethod(ctx);
     // if (count === null) {
     //   return new Response(null, {status: 404, statusText: "count not found"});
     // }
-    return new Response(totalViews, { status: 200 });
+    return new Response(totalViews + count, { status: 200 });
   } catch (e) {
     return new Response(null, { status: 500, statusText: e.message });
   }
